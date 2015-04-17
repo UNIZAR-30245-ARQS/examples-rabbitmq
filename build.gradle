@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+// Esta propiedad del plugin application indica donde está la clase
+// con el main de la aplicación. Como tenemos varias, la podemos
+// dejar dinámica. Así podemos usar:
+// `$ gradle -PmainClass=ClaseQueSea run` para
+// ejecutar distintas clases que tengan main
+if (project.hasProperty("mainClass")) {
+    mainClassName = mainClass
+} else {
+    mainClassName = "ejemplo.Emisor"
+}
+
+// Necesario para ejecutar gradle run en consola con entrada de texto. 
+// Por defecto gradle usa un stdin vacío y no funcionan bien
+run {  
+    standardInput = System.in  
+}
+
+jar {
+    baseName = 'simple-rabbitmq-pipeline'
+    version = '0.1.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
+dependencies {
+    // Id sacado de <http://mvnrepository.com/artifact/com.rabbitmq/amqp-client/3.4.1>
+    compile('com.rabbitmq:amqp-client:3.4.1')    
+}
